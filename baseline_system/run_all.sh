@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -rf temp
+mkdir temp
+
 ./run_pair.sh aym aymara-spanish
 ./run_pair.sh bzd bribri-spanish
 ./run_pair.sh gn guarani-spanish
