@@ -14,7 +14,7 @@ FAIRSEQ_PREPROCESS=fairseq-preprocess
 FAIRSEQ_TRAIN=fairseq-train
 FAIRSEQ_GENERATE=fairseq-generate
 
-EVALUATE="python ../../evaluate.py"
+EVALUATE="python3 ../evaluate.py"
 
 MODELS=${SAVE_DIR}/models/${TGT_FILE}_${SRC_FILE}
 CHECKPOINTS=${SAVE_DIR}/checkpoints/${TGT_FILE}_${SRC_FILE}
@@ -26,7 +26,7 @@ mkdir -p ${MODELS} ${CHECKPOINTS} ${LOGS} ${DATA_OUT} ${TRANSLATIONS}
 
 echo "################ Training SentencePiece tokenizer ################"
 
-python sp_tools.py \
+python3 sp_tools.py \
   --train \
   --src ${SRC_FILE} \
   --tgt ${TGT_FILE} \
@@ -41,7 +41,7 @@ tail -n +4 ${MODELS}/sentencepiece.bpe.vocab | cut -f1 | sed 's/$/ 100/g' > $MOD
 
 echo "################ Tokenizing data ################"
 
-python sp_tools.py \
+python3 sp_tools.py \
   --encode \
   --src ${SRC_FILE} \
   --tgt ${TGT_FILE} \
@@ -89,7 +89,10 @@ ${FAIRSEQ_TRAIN} \
     --max-epoch $EPOCHS --save-interval 1 \
     --tensorboard-logdir $LOGS \
     --save-dir $CHECKPOINTS \
-    --skip-invalid-size-inputs-valid-test
+    --skip-invalid-size-inputs-valid-test \
+    --no-epoch-checkpoints \
+    --no-last-checkpoints \
+    --keep-best-checkpoints 1
 
 echo "################ Done training, starting evaluation ################"
 
